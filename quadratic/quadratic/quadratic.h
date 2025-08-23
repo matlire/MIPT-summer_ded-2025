@@ -7,6 +7,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#include "../utils/colors.h"
+
 #define EPSILON 1e-9
 
 typedef enum 
@@ -52,10 +54,10 @@ bool is_zero (const double value);
     Return:
         root number
 */
-uint8_t calc_roots   (eq_t *const eq);
+uint8_t quadratic_calc_roots   (eq_t *const eq);
 
-uint8_t quadratic_solve (eq_t *const eq);
-uint8_t linear_solve    (eq_t *const eq);
+static uint8_t quadratic_solve (eq_t *const eq);
+static uint8_t linear_solve    (eq_t *const eq);
 
 /*
     Funtions for IO interactions
@@ -64,5 +66,7 @@ uint8_t linear_solve    (eq_t *const eq);
 */
 bool io_parse_input  (eq_t *const eq);
 void io_print_output (const eq_t *const eq);
+
+void clear_buffer();
 
 #endif

@@ -1,19 +1,25 @@
 #include "quadratic/quadratic.h"
+#include "test/test_core.h"
 
 int main() {
+    run_all_tests();
+
     // Create equation struct
     eq_t eq;
     init_eq(&eq);
     
-    // Parse user input
-    bool parse_result = io_parse_input(&eq);
-    if (!parse_result) return 0;
+    while (true)
+    {
+        // Parse user input
+        bool parse_result = io_parse_input(&eq);
+        if (!parse_result) return 0;
 
-    // Calculate root
-    uint8_t root_number = calc_roots(&eq);
+        // Calculate root
+        uint8_t root_number = quadratic_calc_roots(&eq);
     
-    // Print formatted result
-    io_print_output(&eq);
+        // Print formatted result
+        io_print_output(&eq);
+    }
 
     return 0;
 }

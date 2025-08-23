@@ -2,7 +2,7 @@
 
 void init_eq (eq_t *const eq)
 {
-eq->a = 0.0;
+    eq->a = 0.0;
     eq->b = 0.0;
     eq->c = 0.0;
 
@@ -14,16 +14,16 @@ eq->a = 0.0;
 
 bool is_zero (const double value)
 {
-    return (0 <= abs(value) && abs(value) <= EPSILON);
+    return (0 <= fabs(value) && fabs(value) <= EPSILON);
 }
 
-uint8_t linear_solve (eq_t *const eq)
+static uint8_t linear_solve (eq_t *const eq)
 {
     eq->r1 = (-eq->c) / eq->b;
     return ONE_ROOT;
 }
 
-uint8_t quadratic_solve (eq_t *const eq)
+static uint8_t quadratic_solve (eq_t *const eq)
 {
     eq->d  = eq->b * eq->b - 4 * eq->a * eq->c;
     // d < 0
@@ -47,13 +47,17 @@ uint8_t quadratic_solve (eq_t *const eq)
     return eq->root_num;
 }
 
-uint8_t calc_roots(eq_t *const eq)
+uint8_t quadratic_calc_roots(eq_t *const eq)
 {
     // a = 0, b != 0 => 1 root
     if (is_zero(eq->a) && !is_zero(eq->b))
     {
         eq->root_num = linear_solve(eq);
-    // a = 0, b = 0
+    // a = 0, b = 0, c = 0 -> inf roots
+    } else if (is_zero(eq->a) && is_zero(eq->b) && is_zero(eq->c))
+    {
+        eq->root_num = INFINITE_ROOTS;
+    // a = 0, b = 0, c != 0
     } else if (is_zero(eq->a) && is_zero(eq->b))
     {
         eq->root_num = NO_ROOTS;
@@ -64,36 +68,66 @@ uint8_t calc_roots(eq_t *const eq)
     return eq->root_num;
 }
 
+void clear_buffer()
+{
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+}
+
 bool io_parse_input(eq_t *const eq)
 {
-    printf("Enter a, b, c\n");
-    int result = scanf("%lf %lf %lf", &eq->a, &eq->b, &eq->c); 
-    if (!result)
+    print_clear_formatting();
+    int stage = 0;
+    while (stage != 3)
     {
-        printf("Invalid input!");
-        return 0;
+        int result;
+        switch (stage)
+        {
+            case 0:
+                printf("Enter first  ('a') koefficient: ");
+                result = scanf("%lf", &eq->a);
+                break;
+            case 1:
+                printf("Enter second ('b') koefficient: ");
+                result = scanf("%lf", &eq->b);
+                break;
+            case 2:
+                printf("Enter third  ('c') koefficient: ");
+                result = scanf("%lf", &eq->c);
+                break;
+            default: break;
+        } 
+        clear_buffer();
+        if (!result)
+        {
+            printf("Invalid input, try again!");
+        } else {
+            stage++;
+        }
     }
     return 1;
 }
 
 void io_print_output(const eq_t *const eq)
 {
+    print_clear_formatting();
+    print_colored(COLOR_FORE_WHITE, COLOR_BACK_GREEN, "");
     switch (eq->root_num)
     {
         case NO_ROOTS:
-            printf("No roots!");
+            printf("No roots!\n");
             break;
         case ONE_ROOT:
-            printf("x=%.5lf", eq->r1);
+            printf("x=%.5lf\n", eq->r1);
             break;
         case TWO_ROOTS:
-            printf("x1=%.5lf x2=%.5lf", eq->r1, eq->r2);
+            printf("x1=%.5lf x2=%.5lf\n", eq->r1, eq->r2);
             break;
         case INFINITE_ROOTS:
-            printf("Infinite roots amount!");
+            printf("Infinite roots amount!\n");
             break;
         default:
-            printf("Some error");
+            printf("Some error\n");
     }
 }
 
