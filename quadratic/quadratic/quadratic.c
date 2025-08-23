@@ -25,7 +25,7 @@ static uint8_t linear_solve (eq_t *const eq)
 
 static uint8_t quadratic_solve (eq_t *const eq)
 {
-    eq->d  = eq->b * eq->b - 4 * eq->a * eq->c;
+    eq->d = eq->b * eq->b - 4 * eq->a * eq->c;
     // d < 0
     if (eq->d < 0)
     {
@@ -100,7 +100,7 @@ bool io_parse_input(eq_t *const eq)
         clear_buffer();
         if (!result)
         {
-            printf("Invalid input, try again!");
+            printf("Invalid input, try again!\n");
         } else {
             stage++;
         }

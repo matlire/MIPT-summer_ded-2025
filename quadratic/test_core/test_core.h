@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../utils/colors.h"
+#include "colors.h"
 
 /*
     Template for test funciton
@@ -47,6 +47,8 @@ typedef struct {
 
 /*
     Test registration function
+    Parameters:
+        name - test case name
 */
 #define TEST(name)                                                                             \
     void name(void);                                                                           \

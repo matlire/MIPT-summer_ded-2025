@@ -1,7 +1,8 @@
-#include "quadratic/quadratic.h"
-#include "test/test_core.h"
+#include "quadratic.h"
+#include "test_core.h"
 
 int main() {
+    //clear_buffer();
     run_all_tests();
 
     // Create equation struct

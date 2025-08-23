@@ -7,7 +7,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "../utils/colors.h"
+#include "colors.h"
 
 #define EPSILON 1e-9
 

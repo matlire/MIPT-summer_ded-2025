@@ -1,5 +1,5 @@
-#include "../test_core.h"
-#include "../../quadratic/quadratic.h"
+#include "test_core.h"
+#include "quadratic.h"
 
 TEST(test_two_roots_1) {
     eq_t eq = {.a = 1, .b = 5, .c = 6};
