@@ -6,6 +6,11 @@
 #include "io.h"
 #include "quadratic.h"
 
+// Output file prefix
+// Maximum filename size
+#define FILE_OUT_PREFIX    "result."
+#define MAX_FILE_NAME_SIZE 256
+
 /*
     Parses all parameters given to program and executes associated code
     Parameters:

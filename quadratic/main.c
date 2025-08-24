@@ -7,8 +7,7 @@ int main(int argc, char *argv[]) {
     if (!parameters_parse(argc, argv))
     {
         print_clear_formatting();
-        print_colored(COLOR_FORE_WHITE, COLOR_BACK_RED, "");
-        printf("Some error during arguments parsing.\n\nUsage: --input_file input.csv");
+        print_colored(COLOR_FORE_WHITE, COLOR_BACK_RED, "Some error during arguments parsing.\n\nUsage: --input_file input.csv");
         return 0;
     }
 

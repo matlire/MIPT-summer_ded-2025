@@ -19,12 +19,14 @@ uint8_t parse_file (FILE *file, const char *output_filename)
 
     char data[FILE_READ_BUFFER] = { '\0' };
 
+    // Create new file and write input nums and results into it
     while (fgets(data, sizeof(data), file))
     {
         eq_t eq;
         init_eq(&eq);
         
         char *ptr = data;
+        // If correct formatting (e.g.: 1,12.6,-0.2412)
         if (sscanf(ptr, "%lf,%lf,%lf", &eq.a, &eq.b, &eq.c) == 3)
         {
             uint8_t root_number = quadratic_calc_roots(&eq);
