@@ -32,7 +32,7 @@ typedef enum
     COLOR_BACK_WHITE   = 47,
 } AnsiColor;
 
-void print_colored          (AnsiColor fore, AnsiColor back, const char *text);
+void print_colored          (const AnsiColor fore, const AnsiColor back, const char *text);
 void print_clear_formatting ();
 
 #endif

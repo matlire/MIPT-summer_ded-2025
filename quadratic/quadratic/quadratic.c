@@ -74,7 +74,7 @@ void clear_buffer()
     while ((c = getchar()) != '\n' && c != EOF);
 }
 
-bool io_parse_input(eq_t *const eq)
+bool quadratic_parse_input(eq_t *const eq)
 {
     print_clear_formatting();
     int stage = 0;
@@ -108,26 +108,26 @@ bool io_parse_input(eq_t *const eq)
     return 1;
 }
 
-void io_print_output(const eq_t *const eq)
+void quadratic_print_output(const eq_t *const eq, FILE *stream)
 {
     print_clear_formatting();
     print_colored(COLOR_FORE_WHITE, COLOR_BACK_GREEN, "");
     switch (eq->root_num)
     {
         case NO_ROOTS:
-            printf("No roots!\n");
+            fprintf(stream, "No roots!\n");
             break;
         case ONE_ROOT:
-            printf("x=%.5lf\n", eq->r1);
+            fprintf(stream, "x=%.5lf\n", eq->r1);
             break;
         case TWO_ROOTS:
-            printf("x1=%.5lf x2=%.5lf\n", eq->r1, eq->r2);
+            fprintf(stream, "x1=%.5lf x2=%.5lf\n", eq->r1, eq->r2);
             break;
         case INFINITE_ROOTS:
-            printf("Infinite roots amount!\n");
+            fprintf(stream, "Infinite roots!\n");
             break;
         default:
-            printf("Some error\n");
+            fprintf(stream, "Some error\n");
     }
 }
 

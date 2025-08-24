@@ -1,27 +1,30 @@
 # Directories and output file
 SRC_DIR   := quadratic
-BUILD_DIR := $(SRCDIR)/build
-DIST_DIR  := $(SRCDIR)/dist
+BUILD_DIR := $(SRC_DIR)/build
+DIST_DIR  := $(SRC_DIR)/dist
 BIN_NAME  := solver.out
 BIN       := $(BUILD_DIR)/$(BIN_NAME)
 
 # GCC setup
 CC     := gcc
-CFLAGS := -Wall -g                  \
-		  -I $(SRCDIR)/utils/colors \
-		  -I $(SRCDIR)/quadratic    \
-		  -I $(SRCDIR)/test_core    \
-		  -I $(SRCDIR)/test_core/tests
+CFLAGS := -Wall -g -D_GNU_SOURCE               \
+		  -I $(SRC_DIR)/utils/colors           \
+		  -I $(SRC_DIR)/quadratic              \
+		  -I $(SRC_DIR)/test_core              \
+		  -I $(SRC_DIR)/test_core/tests        \
+		  -I $(SRC_DIR)/utils/io               \
+		  -I $(SRC_DIR)/utils/parameter_parser \
+
 LDFLAGS := -lm
 
 # C source files
-SRC_FILES  := $(shell find $(SRCDIR) -type f -name '*.c' -not -path '$(SRCDIR)/build/*' -print; [ -f main.c ] && echo main.c)
+SRC_FILES  := $(shell find $(SRC_DIR) -type f -name '*.c' -not -path '$(SRC_DIR)/build/*' -print; [ -f main.c ] && echo main.c)
 
 # Object files
-OBJ_FILES  := $(patsubst %.c, $(BUILD_DIR)/%.o, $(SRCS))
+OBJ_FILES  := $(patsubst %.c, $(BUILD_DIR)/%.o, $(SRC_FILES))
 
 # Dependencies files
-DEPS_FILES := $(OBJS:.o=.d)
+DEPS_FILES := $(OBJ_FILES:.o=.d)
 
 .PHONY: all clean run files
 all: $(BIN)
@@ -38,6 +41,7 @@ $(BUILD_DIR)/%.o: %.c
 $(BIN): $(OBJ_FILES)
 	@mkdir -p $(dir $@)
 	$(CC) $(OBJ_FILES) $(LDFLAGS) -o $@
+	@mkdir -p $(DIST_DIR)
 	@cp $(BIN) $(DIST_DIR)/$(BIN_NAME)
 
 run: all
@@ -45,5 +49,6 @@ run: all
 
 clean:
 	rm -rf $(BUILD_DIR)
+	rm -rf $(DIST_DIR)
 
 -include $(DEPS)

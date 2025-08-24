@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <fcntl.h>
 
 #include "colors.h"
 
@@ -60,12 +61,12 @@ static uint8_t quadratic_solve (eq_t *const eq);
 static uint8_t linear_solve    (eq_t *const eq);
 
 /*
-    Funtions for IO interactions
-    io_parse_input  - parses given arguments (a, b, c) of equation
-    io_print_output - formats and prints equation result to console
+    Funtions for beautiful io interactions with quadratic solving
+    quadratic_parse_input  - parses given arguments (a, b, c) of equation
+    quadratic_print_output - formats and prints equation result to console
 */
-bool io_parse_input  (eq_t *const eq);
-void io_print_output (const eq_t *const eq);
+bool quadratic_parse_input  (eq_t *const eq);
+void quadratic_print_output (const eq_t *const eq, FILE *stream);
 
 void clear_buffer();
 
