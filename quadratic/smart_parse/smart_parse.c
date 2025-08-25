@@ -143,7 +143,6 @@ static void parse_tokens(token_t *tokens, int *n, tree_node_t **nodes_stack, cha
         else if (token.type == TOKEN_VAR) nodes_stack[(*node_ptr)++] = new_node(NODE_VAR, 0, token.op);
         else if (token.type == TOKEN_OP)
         {
-            printf("\nTOKEN_OP_GEN\n%c%.2lf\n\n", token.op, token.value);
             while ((*op_ptr) > 0 && op_stack[(*op_ptr)-1] != '(')
             {
                 char top = op_stack[(*op_ptr) - 1];
@@ -332,5 +331,5 @@ void parse_eq_input(const char *input_orig, eq_t *eq)
     free_tree(node_2);
     free(buf);
 
-    printf("\n\n%.2lf;%.2lf;%.2lf\n\n", eq->a, eq->b, eq->c);
+    // printf("\n\n%.2lf;%.2lf;%.2lf\n\n", eq->a, eq->b, eq->c);
 }
