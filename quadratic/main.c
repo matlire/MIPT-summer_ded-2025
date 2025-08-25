@@ -17,12 +17,12 @@ int main(int argc, char *argv[]) {
     run_all_tests();
 
     // Create equation struct
-    eq_t eq;
-    init_eq(&eq);
+    eq_t eq; 
    
     // Main loop 
     while (true)
     {
+        init_eq(&eq);
         // Parse user input
         bool parse_result = quadratic_parse_input(&eq);
         if (!parse_result) return 0;

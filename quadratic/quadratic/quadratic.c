@@ -2,6 +2,7 @@
 
 void init_eq (eq_t *const eq)
 {
+    // isnan()
     eq->a = 0.0;
     eq->b = 0.0;
     eq->c = 0.0;
@@ -77,7 +78,7 @@ void clear_buffer()
 bool quadratic_parse_input(eq_t *const eq)
 {
     print_clear_formatting();
-    int stage = 0;
+    /* int stage = 0;
     while (stage != 3)
     {
         int result;
@@ -105,6 +106,18 @@ bool quadratic_parse_input(eq_t *const eq)
             stage++;
         }
     }
+    */
+    printf("Enter equation in generally accepted format: ");
+    char str[MAX_CHARS];
+    fgets(str, MAX_CHARS, stdin);
+    //clear_buffer();
+    //if (!result)
+    //
+    //{
+    //    printf("Invalid input, try again!\n");
+    //}
+    parse_eq_input(str, eq);
+
     return 1;
 }
 

@@ -9,7 +9,9 @@
 #include <fcntl.h>
 
 #include "colors.h"
+#include "smart_parse.h"
 
+#define MAX_CHARS 256
 #define EPSILON 1e-9
 
 typedef enum 
@@ -19,22 +21,6 @@ typedef enum
     TWO_ROOTS      = 2,
     INFINITE_ROOTS = 3,
 } root_nums;
-
-/*
-    Structure for qudratic equation
-    Paraemters:
-        a, b, c  - koefs
-        root_num - number of roots
-        d        - discriminant
-        r1, r2   - roots
-*/
-typedef struct 
-{
-    double  a, b, c;
-    uint8_t root_num;
-    double  d;
-    double  r1, r2;
-} eq_t;
 
 void init_eq (eq_t *const eq);
 
