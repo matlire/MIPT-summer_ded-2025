@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <stdio.h>
+#include <math.h>
 
 #define MAX_TOKENS 256
 
@@ -172,6 +173,14 @@ static bool right_action(char op);
         op    - operation
 */
 static void set_token(token_t *token, token_types type, double value, char op);
+
+/*
+    Check if full subtree is numeric
+    Parameters:
+        node - root node
+        out  - result of operation after evaling
+*/
+static bool eval_num_node(tree_node_t *node, double *out);
 
 /*
     Handle digit in tokenizing

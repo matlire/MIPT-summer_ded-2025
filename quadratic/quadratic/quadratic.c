@@ -110,12 +110,6 @@ bool quadratic_parse_input(eq_t *const eq)
     printf("Enter equation in generally accepted format: ");
     char str[MAX_CHARS];
     fgets(str, MAX_CHARS, stdin);
-    //clear_buffer();
-    //if (!result)
-    //
-    //{
-    //    printf("Invalid input, try again!\n");
-    //}
     parse_eq_input(str, eq);
 
     return 1;

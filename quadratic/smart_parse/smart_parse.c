@@ -62,7 +62,7 @@ static void handle_ops(const char *p, int *n, token_t *tokens)
 {
     char cur = *p;
 
-    bool prev_is_op_or_lpar = (n == 0) ||
+    bool prev_is_op_or_lpar = ((*n) == 0) ||
     (tokens[(*n)-1].type == TOKEN_OP) ||
     (tokens[(*n)-1].type == TOKEN_LPART);
 
@@ -109,6 +109,12 @@ static int tokenize(const char *input, token_t *tokens)
         {
             set_token(&tokens[n], TOKEN_RPART, 0.0, ')');
             n++; p++;
+            
+            if (isalpha((unsigned char)*p) || isdigit((unsigned char)*p) || *p == '(')
+            {
+                set_token(&tokens[n], TOKEN_OP, 0.0, '*');
+                n++;
+            }
         } else p++;
     }
 
@@ -137,12 +143,13 @@ static void parse_tokens(token_t *tokens, int *n, tree_node_t **nodes_stack, cha
         else if (token.type == TOKEN_VAR) nodes_stack[(*node_ptr)++] = new_node(NODE_VAR, 0, token.op);
         else if (token.type == TOKEN_OP)
         {
+            printf("\nTOKEN_OP_GEN\n%c%.2lf\n\n", token.op, token.value);
             while ((*op_ptr) > 0 && op_stack[(*op_ptr)-1] != '(')
             {
                 char top = op_stack[(*op_ptr) - 1];
                 int ptop = prior(top);
                 int pcur = prior(token.op);
-                if ( (ptop > pcur) || (ptop == pcur && !right_action(token.op)) )
+                if ((ptop > pcur) || (ptop == pcur && !right_action(token.op)))
                 {
                     (*op_ptr)--;
                     create_default_op_node(node_ptr, nodes_stack, top);
@@ -186,9 +193,35 @@ static tree_node_t *generate_tree(token_t *tokens, int n)
     return nodes_stack[0];
 }
 
+static bool eval_num_node(tree_node_t *node, double *out)
+{
+    if (!node) return false;
+    if (node->type == NODE_NUM) { *out = node->value; return true; }
+    if (node->type == NODE_VAR) return false;
+
+    double l = 0.0, r = 0.0;
+    if (!eval_num_node(node->left, &l)) return false;
+    if (!eval_num_node(node->right, &r)) return false;
+
+    switch (node->op) {
+        case '+': *out = l + r; return true;
+        case '-': *out = l - r; return true;
+        case '*': *out = l * r; return true;
+        case '/': if (r == 0.0) return false; *out = l / r; return true;
+        case '^': *out = pow(l, r); return true;
+        default: return false;
+    }
+}
+
 static void flatten_mul(tree_node_t *node, double *coeff_out, int *power_out)
 {
     if (!node) return;
+    double v;
+    if (eval_num_node(node, &v))
+    {
+        *coeff_out *= v;
+        return;
+    }
     if (node->type == NODE_NUM)
     {
         *coeff_out *= node->value;
