@@ -22,8 +22,6 @@ typedef enum
     INFINITE_ROOTS = 3,
 } root_nums;
 
-void init_eq (eq_t *const eq);
-
 /*
     Function compares double with zero
     Parameters:
@@ -51,8 +49,8 @@ static uint8_t linear_solve    (eq_t *const eq);
     quadratic_parse_input  - parses given arguments (a, b, c) of equation
     quadratic_print_output - formats and prints equation result to console
 */
-bool quadratic_parse_input  (eq_t *const eq);
-void quadratic_print_output (const eq_t *const eq, FILE *stream);
+uint8_t quadratic_parse_input  (eq_t *const eq);
+void    quadratic_print_output (const eq_t *const eq, FILE *stream);
 
 void clear_buffer();
 

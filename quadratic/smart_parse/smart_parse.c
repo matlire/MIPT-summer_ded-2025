@@ -7,6 +7,18 @@ void init_token (token_t *const token)
     token->value = 0.0;
 }
 
+void init_eq (eq_t *const eq)
+{
+    eq->a = 0.0;
+    eq->b = 0.0;
+    eq->c = 0.0;
+
+    eq->root_num = 0;
+    eq->d        = 0.0;
+    eq->r1       = 0.0;
+    eq->r2       = 0.0;
+}
+
 static tree_node_t *new_node(node_types type, double value, char op)
 {
     tree_node_t *node = malloc(sizeof(tree_node_t));
@@ -219,7 +231,6 @@ static void flatten_mul(tree_node_t *node, double *coeff_out, int *power_out)
     if (eval_num_node(node, &v))
     {
         *coeff_out *= v;
-        return;
     }
     if (node->type == NODE_NUM)
     {
@@ -242,6 +253,7 @@ static void flatten_mul(tree_node_t *node, double *coeff_out, int *power_out)
             {
                 int p = (int) node->right->value;
                 *power_out += p;
+                printf("%c", node->left->op);
             }
             else ;
         }
@@ -252,6 +264,11 @@ static void flatten_mul(tree_node_t *node, double *coeff_out, int *power_out)
 static void collect(tree_node_t *node, eq_t *eq, int sign)
 {
     if (!node || !eq) return;
+
+    if (node->type == NODE_VAR)
+    {
+        eq->to_find = node->op;
+    }
 
     if (node->type == NODE_NUM)      eq->c += sign * node->value;
     else if (node->type == NODE_VAR) eq->b += sign * 1.0;
@@ -296,19 +313,28 @@ static void free_tree(tree_node_t *node)
     free(node);
 }
 
-void parse_eq_input(const char *input_orig, eq_t *eq)
+uint8_t parse_eq_input(const char *input, eq_t *eq)
 {
-    if (!input_orig || !eq) return;
+    if (!input || !eq) return ERROR_SCARYY;
 
-    char *buf = strdup(input_orig);
-    if (!buf) return;
+    char *buf = strdup(input);
+    if (!buf) return ERROR_SCARYY;
+    
+    int c = 0;
+    char *p = buf;
+    while (*p)
+    {
+        if (*p == '=') c++;
+        *p++;
+    }
+    if (c != 1) return ERROR_INCORRECT_FORMATTING;
 
     char *lh = strtok(buf, "=");
     char *rh = strtok(NULL, "=");
     if (!lh || !rh)
     {
         free(buf);
-        return;
+        return ERROR_INCORRECT_FORMATTING;
     }
 
     token_t tokens[MAX_TOKENS];
@@ -330,6 +356,8 @@ void parse_eq_input(const char *input_orig, eq_t *eq)
 
     free_tree(node_2);
     free(buf);
-
+    
     // printf("\n\n%.2lf;%.2lf;%.2lf\n\n", eq->a, eq->b, eq->c);
+    
+    return OK;
 }

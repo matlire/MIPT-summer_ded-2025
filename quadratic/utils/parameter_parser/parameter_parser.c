@@ -34,5 +34,16 @@ uint8_t parameters_parse (int argc, char *argv[])
 
             return 0;
         }
+        if (strstr(argv[i], "--help"))
+        {
+            printf("Super quadratic equation solver!\n\n");
+            printf("Usage:\n");
+            printf("    --help                  -> get help (wow)\n");
+            printf("    --input_file <filename> -> solve equations from csv file of format a,b,c\n\n");
+            printf("P.s. in program you can find super scary error, good luck!\n\n");
+
+            return 1;
+        }
+        return 1;
     }
 }

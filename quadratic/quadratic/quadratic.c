@@ -1,18 +1,5 @@
 #include "quadratic.h"
 
-void init_eq (eq_t *const eq)
-{
-    // isnan()
-    eq->a = 0.0;
-    eq->b = 0.0;
-    eq->c = 0.0;
-
-    eq->root_num = 0;
-    eq->d        = 0.0;
-    eq->r1       = 0.0;
-    eq->r2       = 0.0;
-}
-
 bool is_zero (const double value)
 {
     return (0 <= fabs(value) && fabs(value) <= EPSILON);
@@ -75,7 +62,7 @@ void clear_buffer()
     while ((c = getchar()) != '\n' && c != EOF);
 }
 
-bool quadratic_parse_input(eq_t *const eq)
+uint8_t quadratic_parse_input(eq_t *const eq)
 {
     print_clear_formatting();
     /* int stage = 0;
@@ -108,11 +95,32 @@ bool quadratic_parse_input(eq_t *const eq)
     }
     */
     printf("Enter equation in generally accepted format: ");
+    print_clear_formatting();
     char str[MAX_CHARS];
     fgets(str, MAX_CHARS, stdin);
-    parse_eq_input(str, eq);
+    uint8_t result = parse_eq_input(str, eq);
 
-    return 1;
+    switch (result)
+    {
+        case ERROR_INCORRECT_FORMATTING:
+            print_clear_formatting();
+            print_colored(COLOR_FORE_WHITE, COLOR_BACK_RED, "Incorrect equation!\n");
+            print_clear_formatting();
+            break;
+        case ERROR_SCARYY:
+            print_clear_formatting();
+            print_colored(COLOR_FORE_WHITE, COLOR_BACK_YELLOW, "Spooky scary skeleton error!\n");
+            print_clear_formatting();
+            break;
+        case ERROR_INCORRECT_INPUT:
+            print_clear_formatting();
+            print_colored(COLOR_FORE_WHITE, COLOR_BACK_RED, "Incorrect input formattinq!\n");
+            print_clear_formatting();
+            break;
+        default: break;
+    }
+
+    return result;
 }
 
 void quadratic_print_output(const eq_t *const eq, FILE *stream)
@@ -125,10 +133,10 @@ void quadratic_print_output(const eq_t *const eq, FILE *stream)
             fprintf(stream, "No roots!\n");
             break;
         case ONE_ROOT:
-            fprintf(stream, "x=%.5lf\n", eq->r1);
+            fprintf(stream, "%c = %.5lf\n", eq->to_find, eq->r1);
             break;
         case TWO_ROOTS:
-            fprintf(stream, "x1=%.5lf x2=%.5lf\n", eq->r1, eq->r2);
+            fprintf(stream, "%c1 = %.5lf %c2 = %.5lf\n", eq->to_find, eq->r1, eq->to_find, eq->r2);
             break;
         case INFINITE_ROOTS:
             fprintf(stream, "Infinite roots!\n");

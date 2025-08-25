@@ -8,6 +8,7 @@ BIN       := $(BUILD_DIR)/$(BIN_NAME)
 # GCC setup
 CC     := gcc
 CFLAGS := -Wall -g -D_GNU_SOURCE               \
+		  -I $(SRC_DIR)/logging				   \
 		  -I $(SRC_DIR)/utils/colors           \
 		  -I $(SRC_DIR)/quadratic              \
 		  -I $(SRC_DIR)/smart_parse            \

@@ -9,6 +9,8 @@
 #include <stdio.h>
 #include <math.h>
 
+#include "colors.h"
+
 #define MAX_TOKENS 256
 
 /*
@@ -25,6 +27,7 @@ typedef struct
     uint8_t root_num;
     double  d;
     double  r1, r2;
+    char    to_find;
 } eq_t;
 
 /*
@@ -94,13 +97,25 @@ typedef enum
     PRIOR_LOW = 0,
 } ops_priors;
 
+typedef enum
+{
+    OK,
+    ERROR_INCORRECT_FORMATTING,
+    ERROR_SCARYY,
+    ERROR_INCORRECT_INPUT,
+} errors;
+
+void init_eq (eq_t *const eq);
+
 /*
     Parse equation input
     Parameters:
         input - input raw string
         eq    - precreated equation to store result
+    Output:
+        Result code
 */
-void parse_eq_input (const char *const input, eq_t *eq);
+uint8_t parse_eq_input (const char *const input, eq_t *eq);
 
 /*
     Init token

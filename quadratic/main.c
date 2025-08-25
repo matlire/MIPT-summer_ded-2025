@@ -7,7 +7,7 @@ int main(int argc, char *argv[]) {
     if (!parameters_parse(argc, argv))
     {
         print_clear_formatting();
-        print_colored(COLOR_FORE_WHITE, COLOR_BACK_RED, "Some error during arguments parsing.\n\nUsage: --input_file input.csv");
+        print_colored(COLOR_FORE_WHITE, COLOR_BACK_RED, "Some error during arguments parsing.\n\nCheck usage using --help!\n");
         return 0;
     }
 
@@ -19,13 +19,13 @@ int main(int argc, char *argv[]) {
     // Create equation struct
     eq_t eq; 
    
-    // Main loop 
+    // Main loop
     while (true)
     {
         init_eq(&eq);
         // Parse user input
-        bool parse_result = quadratic_parse_input(&eq);
-        if (!parse_result) return 0;
+        uint8_t parse_result = quadratic_parse_input(&eq);
+        if (parse_result != OK) continue;
 
         // Calculate root
         uint8_t root_number = quadratic_calc_roots(&eq);
