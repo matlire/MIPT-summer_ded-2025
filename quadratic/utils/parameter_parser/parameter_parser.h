@@ -11,6 +11,13 @@
 #define FILE_OUT_PREFIX    "result."
 #define MAX_FILE_NAME_SIZE 256
 
+typedef enum
+{
+    OK_EXIT = 0,
+    PERROR  = 1,
+    OK_CONT = 2,
+} parser_codes;
+
 /*
     Parses all parameters given to program and executes associated code
     Parameters:

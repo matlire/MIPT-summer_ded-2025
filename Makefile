@@ -8,13 +8,13 @@ BIN       := $(BUILD_DIR)/$(BIN_NAME)
 # GCC setup
 CC     := gcc
 CFLAGS := -Wall -g -D_GNU_SOURCE               \
-		  -I $(SRC_DIR)/logging				   \
 		  -I $(SRC_DIR)/utils/colors           \
 		  -I $(SRC_DIR)/quadratic              \
+		  -I $(SRC_DIR)/utils/io               \
+		  -I $(SRC_DIR)/logging				   \
 		  -I $(SRC_DIR)/smart_parse            \
 		  -I $(SRC_DIR)/test_core              \
 		  -I $(SRC_DIR)/test_core/tests        \
-		  -I $(SRC_DIR)/utils/io               \
 		  -I $(SRC_DIR)/utils/parameter_parser \
 
 LDFLAGS := -lm

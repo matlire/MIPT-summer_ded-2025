@@ -92,17 +92,17 @@ typedef struct tree_node_t
 typedef enum
 {
     PRIOR_HIGHEST = 3,
-    PRIOR_HIGH = 2,
-    PRIOR_MEDIUM = 1,
-    PRIOR_LOW = 0,
+    PRIOR_HIGH    = 2,
+    PRIOR_MEDIUM  = 1,
+    PRIOR_LOW     = 0,
 } ops_priors;
 
 typedef enum
 {
-    OK,
-    ERROR_INCORRECT_FORMATTING,
-    ERROR_SCARYY,
-    ERROR_INCORRECT_INPUT,
+    OK                         = 0,
+    ERROR_INCORRECT_FORMATTING = 1,
+    ERROR_SCARYY               = 2,
+    ERROR_INCORRECT_INPUT      = 3,
 } errors;
 
 void init_eq (eq_t *const eq);

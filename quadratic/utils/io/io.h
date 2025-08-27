@@ -16,9 +16,9 @@
     Parameters:
         name  - name of file
     Output:
-        FILE* - pointer to FILE
+        FILE  - pointer to FILE
 */
-FILE*   load_file  (const char *name, const char *mode);
+FILE *load_file  (const char *name, const char *mode);
 
 /*
     Parses filee line by line and calculates something

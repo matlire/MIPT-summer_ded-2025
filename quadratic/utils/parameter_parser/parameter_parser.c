@@ -4,7 +4,7 @@ uint8_t parameters_parse (int argc, char *argv[])
 {
     if (argc < 2)
     {
-        return 1;
+        return OK_CONT;
     }
 
     for (int i = 1; i < argc; i++)
@@ -24,15 +24,15 @@ uint8_t parameters_parse (int argc, char *argv[])
             {
                 print_clear_formatting();
                 print_colored(COLOR_FORE_WHITE, COLOR_BACK_RED, "Error! Too long output filename\n\n");
-                return 0;
+                return PERROR;
             }
 
             strncat(new_name, FILE_OUT_PREFIX, strlen(FILE_OUT_PREFIX));
             strncat(new_name, name,            strlen(name));
 
-            if (parse_file(f, new_name)) return 1;
+            if (parse_file(f, new_name)) return OK_CONT;
 
-            return 0;
+            return PERROR;
         }
         if (strstr(argv[i], "--help"))
         {
@@ -42,8 +42,8 @@ uint8_t parameters_parse (int argc, char *argv[])
             printf("    --input_file <filename> -> solve equations from csv file of format a,b,c\n\n");
             printf("P.s. in program you can find super scary error, good luck!\n\n");
 
-            return 1;
+            return OK_EXIT;
         }
-        return 1;
+        return PERROR;
     }
 }

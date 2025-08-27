@@ -226,11 +226,13 @@ static bool eval_num_node(tree_node_t *node, double *out)
 
 static void flatten_mul(tree_node_t *node, double *coeff_out, int *power_out)
 {
+
     if (!node) return;
-    double v;
+    double v = 0;
     if (eval_num_node(node, &v))
     {
         *coeff_out *= v;
+        return;
     }
     if (node->type == NODE_NUM)
     {
@@ -239,6 +241,7 @@ static void flatten_mul(tree_node_t *node, double *coeff_out, int *power_out)
     else if (node->type == NODE_VAR)
     {
         *power_out += 1;
+
     }
     else if (node->type == NODE_OP)
     {
@@ -253,12 +256,13 @@ static void flatten_mul(tree_node_t *node, double *coeff_out, int *power_out)
             {
                 int p = (int) node->right->value;
                 *power_out += p;
-                printf("%c", node->left->op);
+
             }
             else ;
         }
         else ;
     }
+
 }
 
 static void collect(tree_node_t *node, eq_t *eq, int sign)
@@ -271,7 +275,7 @@ static void collect(tree_node_t *node, eq_t *eq, int sign)
     }
 
     if (node->type == NODE_NUM)      eq->c += sign * node->value;
-    else if (node->type == NODE_VAR) eq->b += sign * 1.0;
+    else if (node->type == NODE_VAR) { eq->b += sign * 1.0; eq->to_find = node->op; }
     else if (node->type == NODE_OP)
     {
         if (node->op == '+')
@@ -297,6 +301,7 @@ static void collect(tree_node_t *node, eq_t *eq, int sign)
         {
             if (node->left && node->left->type == NODE_VAR && node->right && node->right->type == NODE_NUM)
             {
+                eq->to_find = node->left->op;
                 int p = (int)node->right->value;
                 if (p == 2)      eq->a += sign * 1.0;
                 else if (p == 1) eq->b += sign * 1.0;
@@ -357,7 +362,7 @@ uint8_t parse_eq_input(const char *input, eq_t *eq)
     free_tree(node_2);
     free(buf);
     
-    // printf("\n\n%.2lf;%.2lf;%.2lf\n\n", eq->a, eq->b, eq->c);
+    //printf("\n\n%.2lf;%.2lf;%.2lf\n\n", eq->a, eq->b, eq->c);
     
     return OK;
 }
