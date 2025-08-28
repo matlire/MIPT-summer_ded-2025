@@ -26,7 +26,7 @@ typedef struct
 {
     double  a, b, c;
     uint8_t root_num;
-    double  d;
+    double  d;          // Remove from struct
     double  r1, r2;
     char    to_find;
 } eq_t;
@@ -129,7 +129,7 @@ void init_token (token_t *const token);
         input  - input raw string
         tokens - precreated token array
 */
-static int tokenize (const char *input, token_t *tokens);
+static int tokenize (const char *input, token_t *const tokens);
 
 /*
     Generate tree
@@ -137,7 +137,7 @@ static int tokenize (const char *input, token_t *tokens);
         tokens - array of tokens
         n      - tokens count
 */
-static tree_node_t *generate_tree  (token_t *tokens, int n);
+static tree_node_t *generate_tree  (const token_t *const tokens, const int n);
 
 /*
     Flatten multiply operation
@@ -146,7 +146,7 @@ static tree_node_t *generate_tree  (token_t *tokens, int n);
         coeff_out - array of returning coefficients
         power_out - output power of variable
 */
-static void flatten_mul(tree_node_t *node, double *coeff_out, int *power_out);
+static void flatten_mul(const tree_node_t *node, double *const coeff_out, int *const power_out);
 
 /*
     Collect tree into equation
@@ -155,7 +155,20 @@ static void flatten_mul(tree_node_t *node, double *coeff_out, int *power_out);
         eq   - equation to collect into
         sign - sign of collectable (left part +, right part -)
 */
-static void collect (tree_node_t *node, eq_t *eq, int sign);
+static void collect (const tree_node_t *node, eq_t *const eq, const int sign);
+
+
+/*
+    Parse tokens into arrays
+    Parameters:
+        tokens      - array of tokens
+        n           - tokens count
+        nodes_stack - array of nodes
+        op_stack    - operations array (kinda stack)
+        node_ptr    - ptr to node in nodes_stack
+        op_ptr      - ptr to operaion in op_stack
+*/
+static void parse_tokens(token_t *const tokens, int *const n, tree_node_t **const nodes_stack, char *const op_stack, int *const node_ptr, int *const op_ptr);
 
 /*
     Create new node
@@ -164,21 +177,21 @@ static void collect (tree_node_t *node, eq_t *eq, int sign);
         value - value of node
         op    - operations
 */
-static tree_node_t *new_node (node_types type, double value, char op);
+static tree_node_t *new_node (const node_types type, const double value, const char op);
 
 /*
     Prior returns priority if operation op
     Parameter:
         op - operation
 */
-static int prior (char op);
+static int prior (const char op);
 
 /*
     Right/left action (+x - left, x^ - right)
     Parameter:
         op - operations
 */
-static bool right_action(char op);
+static bool right_action(const char op);
 
 /*
     Init token
@@ -188,7 +201,7 @@ static bool right_action(char op);
         value - token value
         op    - operation
 */
-static void set_token(token_t *token, token_types type, double value, char op);
+static void set_token(token_t *const token, const token_types type, const double value, const char op);
 
 /*
     Check if full subtree is numeric
@@ -196,7 +209,7 @@ static void set_token(token_t *token, token_types type, double value, char op);
         node - root node
         out  - result of operation after evaling
 */
-static bool eval_num_node(tree_node_t *node, double *out);
+static bool eval_num_node(const tree_node_t *node, double *const out);
 
 /*
     Handle digit in tokenizing
@@ -205,7 +218,7 @@ static bool eval_num_node(tree_node_t *node, double *out);
         n      - tokens count
         tokens - ptr to token array
 */
-static const char *handle_digit(const char *p, int *n, token_t *tokens);
+static const char *handle_digit(const char *p, int *const n, token_t *const tokens);
 
 /*
     Handle operation in tokenizing
@@ -214,7 +227,7 @@ static const char *handle_digit(const char *p, int *n, token_t *tokens);
         n      - tokens count
         tokens - ptr to token array
 */
-static void handle_ops(const char *p, int *n, token_t *tokens);
+static void handle_ops(const char *p, int *const n, token_t *const tokens);
 
 /*
     Init and create operation node
@@ -223,6 +236,13 @@ static void handle_ops(const char *p, int *n, token_t *tokens);
         nodes_stack - nodes array (stack)
         top         - top stack operation 
 */
-static tree_node_t *create_default_op_node(int *node_ptr, tree_node_t **nodes_stack, char top);
+static tree_node_t *create_default_op_node(int *const node_ptr, tree_node_t **const nodes_stack, const char top);
+
+/*
+    Free tree from memory
+    Parameters:
+        node - root node
+*/
+static void free_tree(tree_node_t *node);
 
 #endif

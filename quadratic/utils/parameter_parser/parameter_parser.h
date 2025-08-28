@@ -25,13 +25,13 @@ typedef enum
         argc - argument count
         argv - arguments
 */
-uint8_t parameters_parse (int argc, char *argv[]);
+uint8_t parameters_parse (const int argc, char *const argv[]);
 
 /*
     Parses filee line by line and calculates something
     Parameters:
         file - file to parse
 */
-uint8_t parse_file (FILE *file, const char *output_filename);
+uint8_t parse_file (FILE *file, const char *const output_filename);
 
 #endif

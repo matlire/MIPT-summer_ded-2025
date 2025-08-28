@@ -26,16 +26,17 @@ static tree_node_t *new_node(node_types type, double value, char op)
     log_printf(DEBUG, "Initing node");
     tree_node_t *node = malloc(sizeof(tree_node_t));
     if (!node) { log_printf(ERROR, "Not inited node with type=%d value=%lf op=%c", type, value, op); return NULL; }
-    node->type = type;
+    node->type  = type;
     node->value = value;
-    node->op = op;
-    node->left = NULL;
+    node->op    = op;
+    node->left  = NULL;
     node->right = NULL;
     log_printf(DEBUG, "Inited Node");
+
     return node;
 }
 
-static int prior(char op)
+static int prior(const char op)
 {
     log_printf(DEBUG, "Calculating priority for %c", op);
     switch (op)
@@ -47,13 +48,13 @@ static int prior(char op)
     }
 }
 
-static bool right_action(char op)
+static bool right_action(const char op)
 {
     log_printf(DEBUG, "Right action for %c", op);
     return (op == '^');
 }
 
-static void set_token(token_t *token, token_types type, double value, char op)
+static void set_token(token_t *const token, const token_types type, const double value, const char op)
 {
     log_printf(DEBUG, "Setting token with type=%d value=%.5lf op=%c", type, value, op);
     token->type  = type;
@@ -61,7 +62,7 @@ static void set_token(token_t *token, token_types type, double value, char op)
     token->op    = op;
 }
 
-static const char *handle_digit(const char *p, int *n, token_t *tokens)
+static const char *handle_digit(const char *p, int *const n, token_t *const tokens)
 {
     log_printf(DEBUG, "Handling digit with p=%s n=%d", p, *n);
     char *end = NULL;
@@ -79,7 +80,7 @@ static const char *handle_digit(const char *p, int *n, token_t *tokens)
     return end;
 }
 
-static void handle_ops(const char *p, int *n, token_t *tokens)
+static void handle_ops(const char *p, int *const n, token_t *const tokens)
 {
     char cur = *p;
 
@@ -100,7 +101,7 @@ static void handle_ops(const char *p, int *n, token_t *tokens)
     set_token(&tokens[*n], TOKEN_OP, 0.0, cur);
 }
 
-static int tokenize(const char *input, token_t *tokens)
+static int tokenize(const char *input, token_t *const tokens)
 {
     int n = 0;
     const char *p = input;
@@ -147,20 +148,23 @@ static int tokenize(const char *input, token_t *tokens)
     return n;
 }
 
-static tree_node_t *create_default_op_node(int *node_ptr, tree_node_t **nodes_stack, char top)
+static tree_node_t *create_default_op_node(int *const node_ptr, tree_node_t **const nodes_stack, const char top)
 {
     log_printf(DEBUG, "Creating default operation node");
     if ((*node_ptr) < 2) return NULL;
+
     tree_node_t *r = nodes_stack[--(*node_ptr)];
     tree_node_t *l = nodes_stack[--(*node_ptr)];
     tree_node_t *node = new_node(NODE_OP, 0, top);
+
     node->left = l;
     node->right = r;
     nodes_stack[(*node_ptr)++] = node;
+    
     return node;
 }
 
-static void parse_tokens(token_t *tokens, int *n, tree_node_t **nodes_stack, char *op_stack, int *node_ptr, int *op_ptr)
+static void parse_tokens(token_t *const tokens, int *const n, tree_node_t **const nodes_stack, char *const op_stack, int *const node_ptr, int *const op_ptr)
 {
     for (int i = 0; i < (*n); ++i)
     {
@@ -197,7 +201,7 @@ static void parse_tokens(token_t *tokens, int *n, tree_node_t **nodes_stack, cha
     }
 }
 
-static tree_node_t *generate_tree(token_t *tokens, int n)
+static tree_node_t *generate_tree(const token_t *const tokens, const int n)
 {
     log_printf(DEBUG, "Generating tree...");
     if (n == 0) return NULL;
@@ -222,7 +226,7 @@ static tree_node_t *generate_tree(token_t *tokens, int n)
     return nodes_stack[0];
 }
 
-static bool eval_num_node(tree_node_t *node, double *out)
+static bool eval_num_node(const tree_node_t *node, double *const out)
 {
     log_printf(DEBUG, "Evaling num node with type=%d value=%.5lf op=%c", node->type, node->value, node->op);
 
@@ -244,7 +248,7 @@ static bool eval_num_node(tree_node_t *node, double *out)
     }
 }
 
-static void flatten_mul(tree_node_t *node, double *coeff_out, int *power_out)
+static void flatten_mul(const tree_node_t *node, double *const coeff_out, int *const power_out)
 {
     if (!node) { log_printf(ERROR, "No node for flattening!"); return; }
     double v = 0;
@@ -284,7 +288,7 @@ static void flatten_mul(tree_node_t *node, double *coeff_out, int *power_out)
     log_printf(DEBUG, "Done flattening with coeff_out=%.5lf power_out=%d", *coeff_out, *power_out);
 }
 
-static void collect(tree_node_t *node, eq_t *eq, int sign)
+static void collect(const tree_node_t *node, eq_t *const eq, const int sign)
 {
     if (!node || !eq) { log_printf(ERROR, "No node or no eq for collecting!"); return; }
 

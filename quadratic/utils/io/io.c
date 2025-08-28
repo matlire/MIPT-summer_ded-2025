@@ -1,6 +1,6 @@
 #include "io.h"
 
-FILE *load_file (const char *name, const char *mode)
+FILE *load_file (const char *const name, const char *const mode)
 {
     FILE* f = fopen(name, mode);
     if (!f)

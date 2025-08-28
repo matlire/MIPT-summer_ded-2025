@@ -20,6 +20,7 @@ int main(int argc, char *argv[]) {
             print_colored(COLOR_FORE_WHITE, COLOR_BACK_RED, \
                           "Some error during arguments parsing.\n\nCheck usage using --help!\n");
             log_printf(FATAL, "Some error during argument parsing.");
+            close_log_file();
             return 1;
     }
 
@@ -33,6 +34,7 @@ int main(int argc, char *argv[]) {
     {
         log_printf(FATAL, "Tests failed!");
         print_colored(COLOR_FORE_WHITE, COLOR_BACK_RED, "TESTS FAILED!");
+        close_log_file();
         return 1;
     }
     log_printf(INFO, "Tests OK");

@@ -42,7 +42,7 @@ typedef struct
         file  - file to write into
         level - logging level
 */
-void init_logging (FILE *file, logging_level level);
+void init_logging (FILE *file, const logging_level level);
 
 /*
     Print to log
@@ -51,7 +51,7 @@ void init_logging (FILE *file, logging_level level);
         str   - string of log output
         args  - arguments for formatting
 */
-void log_printf (logging_level level, const char *fmt, ...);
+void log_printf (const logging_level level, const char *fmt, ...);
 
 /*
     Close log file
@@ -63,7 +63,7 @@ void close_log_file ();
     Parameters:
         timestamp - string where to write timestamp converted to readable format
 */
-static void get_timestamp (char *timestamp);
+static void get_timestamp (char *const timestamp);
 
 /*
     Format log string to something like [01-01-1970 12:00:00 INFO] timestamp 0 (wow)
@@ -72,6 +72,6 @@ static void get_timestamp (char *timestamp);
         str     - string of log output
         res_str - string where to write formatted result
 */
-static void format_log    (logging_level level, char *str, char *res_str); 
+static void format_log (const logging_level level, const char *const str, char *res_str); 
 
 #endif

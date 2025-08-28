@@ -1,6 +1,6 @@
 #include "parameter_parser.h"
 
-uint8_t parameters_parse (int argc, char *argv[])
+uint8_t parameters_parse (const int argc, char *const argv[])
 {
     log_printf(DEBUG, "Parsing cmd parameters");
     if (argc < 2)
@@ -55,7 +55,7 @@ uint8_t parameters_parse (int argc, char *argv[])
     }
 }
 
-uint8_t parse_file (FILE *file, const char *output_filename)
+uint8_t parse_file (FILE *file, const char *const output_filename)
 {
     FILE *output = load_file(output_filename, "w");
 

@@ -79,35 +79,7 @@ void clear_buffer()
 uint8_t quadratic_parse_input(eq_t *const eq)
 {
     print_clear_formatting();
-    /* int stage = 0;
-    while (stage != 3)
-    {
-        int result;
-        switch (stage)
-        {
-            case 0:
-                printf("Enter first  ('a') koefficient: ");
-                result = scanf("%lf", &eq->a);
-                break;
-            case 1:
-                printf("Enter second ('b') koefficient: ");
-                result = scanf("%lf", &eq->b);
-                break;
-            case 2:
-                printf("Enter third  ('c') koefficient: ");
-                result = scanf("%lf", &eq->c);
-                break;
-            default: break;
-        } 
-        clear_buffer();
-        if (!result)
-        {
-            printf("Invalid input, try again!\n");
-        } else {
-            stage++;
-        }
-    }
-    */
+
     printf("Enter equation in generally accepted format: ");
     print_clear_formatting();
     char str[MAX_CHARS];
@@ -145,6 +117,7 @@ void quadratic_print_output(const eq_t *const eq, FILE *stream)
 {
     print_clear_formatting();
     print_colored(COLOR_FORE_WHITE, COLOR_BACK_GREEN, "");
+
     switch (eq->root_num)
     {
         case NO_ROOTS:
