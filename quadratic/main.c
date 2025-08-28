@@ -8,7 +8,7 @@ int main(int argc, char *argv[]) {
     FILE *log_file = load_file("log.log", "a");
     init_logging(log_file, DEBUG);
 
-    log_printf(INFO, "\n\n---STARTING SOLVER---\n\n");
+    log_printf(INFO, "\n\n---STARTING SOLVER---");
 
     // Parse and execute flags
     switch (parameters_parse(argc, argv))
@@ -20,13 +20,23 @@ int main(int argc, char *argv[]) {
             print_colored(COLOR_FORE_WHITE, COLOR_BACK_RED, \
                           "Some error during arguments parsing.\n\nCheck usage using --help!\n");
             log_printf(FATAL, "Some error during argument parsing.");
-            return 0;
+            return 1;
     }
 
-    print_clear_formatting();
+    print_clear_formatting(); 
 
     // Test quadratic function
-    run_all_tests();
+    log_printf(INFO, "Running tests...");
+    print_colored(COLOR_FORE_BLACK, COLOR_BACK_YELLOW, "RUNNING TESTS...\n");
+    int failed = run_all_tests();
+    if (failed)
+    {
+        log_printf(FATAL, "Tests failed!");
+        print_colored(COLOR_FORE_WHITE, COLOR_BACK_RED, "TESTS FAILED!");
+        return 1;
+    }
+    log_printf(INFO, "Tests OK");
+    print_colored(COLOR_FORE_WHITE, COLOR_BACK_GREEN, "OK\n\n");
 
     // Create equation struct
     eq_t eq = { }; 

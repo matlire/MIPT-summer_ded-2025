@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "logging.h"
 #include "colors.h"
 
 /*
@@ -22,27 +23,31 @@ typedef struct {
 /*
     Assert double with epsilon
 */
-#define ASSERT_EQ_DOUBLE(expected, actual, eps)                        \
-    {                                                                  \
-        if (fabs((expected) - (actual)) > (eps)) {                     \
-            print_colored(COLOR_FORE_WHITE, COLOR_BACK_RED, "");       \
-            printf("[FAIL] %s:%d: expected %f, got %f",                \
-            __FILE__, __LINE__, (double)(expected), (double)(actual)); \
-            exit(1);                                                   \
-        }                                                              \
+#define ASSERT_EQ_DOUBLE(expected, actual, eps)                           \
+    {                                                                     \
+        if (fabs((expected) - (actual)) > (eps)) {                        \
+            log_printf(FATAL, "[TEST FAIL] %s:%d: expected %lf, got %lf", \
+            __FILE__, __LINE__, (double)(expected), (double)(actual));    \
+            print_colored(COLOR_FORE_WHITE, COLOR_BACK_RED, "");          \
+            printf("[TEST FAIL] %s:%d: expected %lf, got %lf",            \
+            __FILE__, __LINE__, (double)(expected), (double)(actual));    \
+            exit(1);                                                      \
+        }                                                                 \
     }
 
 /*
     Assert ints
 */
-#define ASSERT_EQ_INT(expected, actual)                          \
-    {                                                            \
-        if ((expected) != (actual)) {                            \
-            print_colored(COLOR_FORE_WHITE, COLOR_BACK_RED, ""); \
-            printf("[FAIL] %s:%d: expected %d, got %d\n",        \
-            __FILE__, __LINE__, (int)(expected), (int)(actual)); \
-            exit(1);                                             \
-        }                                                        \
+#define ASSERT_EQ_INT(expected, actual)                                 \
+    {                                                                   \
+        if ((expected) != (actual)) {                                   \
+            log_printf(FATAL, "[TEST FAIL] %s:%d: expected %d, got %d", \
+            __FILE__, __LINE__, (int)(expected), (int)(actual));        \
+            print_colored(COLOR_FORE_WHITE, COLOR_BACK_RED, "");        \
+            printf("[TEST FAIL] %s:%d: expected %d, got %d\n",          \
+            __FILE__, __LINE__, (int)(expected), (int)(actual));        \
+            exit(1);                                                    \
+        }                                                               \
     }
 
 /*

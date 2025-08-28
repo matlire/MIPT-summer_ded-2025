@@ -26,4 +26,11 @@ typedef enum
 */
 uint8_t parameters_parse (int argc, char *argv[]);
 
+/*
+    Parses filee line by line and calculates something
+    Parameters:
+        file - file to parse
+*/
+uint8_t parse_file (FILE *file, const char *output_filename);
+
 #endif

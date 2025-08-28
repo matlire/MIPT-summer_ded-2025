@@ -10,6 +10,7 @@
 
 #include "colors.h"
 #include "smart_parse.h"
+#include "logging.h"
 
 #define MAX_CHARS 256
 #define EPSILON 1e-9

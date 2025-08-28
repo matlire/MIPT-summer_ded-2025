@@ -10,6 +10,7 @@
 #include <math.h>
 
 #include "colors.h"
+#include "logging.h"
 
 #define MAX_TOKENS 256
 

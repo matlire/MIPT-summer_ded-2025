@@ -10,15 +10,18 @@ void init_logging (FILE *file, logging_level level)
 
 void log_printf (logging_level level, const char *fmt, ...)
 {
+    if (!(level >= logging.level)) return;
+
+    char str[MAX_LOG_STR_SIZE]     = {  };
     char res_str[MAX_LOG_STR_SIZE] = {  };
         
     va_list args = {  };
     
     va_start(args, fmt);
-    vsprintf(res_str, fmt, args);
+    int result = vsnprintf(str, MAX_LOG_STR_SIZE, fmt, args);
     va_end(args);
 
-    format_log(level, fmt, res_str);
+    format_log(level, str, res_str);
     fprintf(logging.file, "%s", res_str);
     
     fflush(logging.file);

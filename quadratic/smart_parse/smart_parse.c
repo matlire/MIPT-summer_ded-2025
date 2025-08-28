@@ -9,6 +9,7 @@ void init_token (token_t *const token)
 
 void init_eq (eq_t *const eq)
 {
+    log_printf(DEBUG, "Initing EQ");
     eq->a = 0.0;
     eq->b = 0.0;
     eq->c = 0.0;
@@ -17,22 +18,26 @@ void init_eq (eq_t *const eq)
     eq->d        = 0.0;
     eq->r1       = 0.0;
     eq->r2       = 0.0;
+    log_printf(DEBUG, "Inited EQ");
 }
 
 static tree_node_t *new_node(node_types type, double value, char op)
 {
+    log_printf(DEBUG, "Initing node");
     tree_node_t *node = malloc(sizeof(tree_node_t));
-    if (!node) return NULL;
+    if (!node) { log_printf(ERROR, "Not inited node with type=%d value=%lf op=%c", type, value, op); return NULL; }
     node->type = type;
     node->value = value;
     node->op = op;
     node->left = NULL;
     node->right = NULL;
+    log_printf(DEBUG, "Inited Node");
     return node;
 }
 
 static int prior(char op)
 {
+    log_printf(DEBUG, "Calculating priority for %c", op);
     switch (op)
     {
         case '^': return PRIOR_HIGHEST;
@@ -44,11 +49,13 @@ static int prior(char op)
 
 static bool right_action(char op)
 {
+    log_printf(DEBUG, "Right action for %c", op);
     return (op == '^');
 }
 
 static void set_token(token_t *token, token_types type, double value, char op)
 {
+    log_printf(DEBUG, "Setting token with type=%d value=%.5lf op=%c", type, value, op);
     token->type  = type;
     token->value = value;
     token->op    = op;
@@ -56,6 +63,7 @@ static void set_token(token_t *token, token_types type, double value, char op)
 
 static const char *handle_digit(const char *p, int *n, token_t *tokens)
 {
+    log_printf(DEBUG, "Handling digit with p=%s n=%d", p, *n);
     char *end = NULL;
     double val = strtod(p, &end);
     set_token(&tokens[*n], TOKEN_NUM, val, 0);
@@ -63,6 +71,7 @@ static const char *handle_digit(const char *p, int *n, token_t *tokens)
 
     if (isalpha((unsigned char)*end) || *end == '(')
     {
+        log_printf(DEBUG, "Alpha or ( found");
         set_token(&tokens[*n], TOKEN_OP, 0.0, '*');
         (*n)++;
     }
@@ -77,6 +86,8 @@ static void handle_ops(const char *p, int *n, token_t *tokens)
     bool prev_is_op_or_lpar = ((*n) == 0) ||
     (tokens[(*n)-1].type == TOKEN_OP) ||
     (tokens[(*n)-1].type == TOKEN_LPART);
+
+    log_printf(DEBUG, "Handling ops with char=%c and prev_is_op_or_lpar=%d", cur, prev_is_op_or_lpar);
 
     if ((cur == '+' || cur == '-') && prev_is_op_or_lpar)
     {
@@ -94,8 +105,11 @@ static int tokenize(const char *input, token_t *tokens)
     int n = 0;
     const char *p = input;
 
+    log_printf(DEBUG, "Tokenizing with input=%s", input);
+
     while (*p && n < MAX_TOKENS)
     {
+        log_printf(DEBUG, "Iterating with p=%c and n=%d", *p, n);
         if (isdigit((unsigned char)*p) || (*p == '.' && isdigit((unsigned char)*(p+1))))
         {
             p = handle_digit(p, &n, tokens);
@@ -135,6 +149,7 @@ static int tokenize(const char *input, token_t *tokens)
 
 static tree_node_t *create_default_op_node(int *node_ptr, tree_node_t **nodes_stack, char top)
 {
+    log_printf(DEBUG, "Creating default operation node");
     if ((*node_ptr) < 2) return NULL;
     tree_node_t *r = nodes_stack[--(*node_ptr)];
     tree_node_t *l = nodes_stack[--(*node_ptr)];
@@ -150,7 +165,7 @@ static void parse_tokens(token_t *tokens, int *n, tree_node_t **nodes_stack, cha
     for (int i = 0; i < (*n); ++i)
     {
         token_t token = tokens[i];
-
+        log_printf(DEBUG, "Parsing token with type=%d value=%.5lf op=%c", token.type, token.value, token.op);
         if (token.type      == TOKEN_NUM) nodes_stack[(*node_ptr)++] = new_node(NODE_NUM, token.value, 0);
         else if (token.type == TOKEN_VAR) nodes_stack[(*node_ptr)++] = new_node(NODE_VAR, 0, token.op);
         else if (token.type == TOKEN_OP)
@@ -184,6 +199,7 @@ static void parse_tokens(token_t *tokens, int *n, tree_node_t **nodes_stack, cha
 
 static tree_node_t *generate_tree(token_t *tokens, int n)
 {
+    log_printf(DEBUG, "Generating tree...");
     if (n == 0) return NULL;
 
     tree_node_t *nodes_stack[MAX_TOKENS];
@@ -200,12 +216,16 @@ static tree_node_t *generate_tree(token_t *tokens, int n)
         create_default_op_node(&node_ptr, nodes_stack, top);
     }
 
-    if (node_ptr != 1) return NULL;
+    if (node_ptr != 1) { log_printf(ERROR, "Error generating tree! n=%d", n); return NULL; }
+
+    log_printf(DEBUG, "Tree generated!");
     return nodes_stack[0];
 }
 
 static bool eval_num_node(tree_node_t *node, double *out)
 {
+    log_printf(DEBUG, "Evaling num node with type=%d value=%.5lf op=%c", node->type, node->value, node->op);
+
     if (!node) return false;
     if (node->type == NODE_NUM) { *out = node->value; return true; }
     if (node->type == NODE_VAR) return false;
@@ -226,8 +246,7 @@ static bool eval_num_node(tree_node_t *node, double *out)
 
 static void flatten_mul(tree_node_t *node, double *coeff_out, int *power_out)
 {
-
-    if (!node) return;
+    if (!node) { log_printf(ERROR, "No node for flattening!"); return; }
     double v = 0;
     if (eval_num_node(node, &v))
     {
@@ -262,19 +281,21 @@ static void flatten_mul(tree_node_t *node, double *coeff_out, int *power_out)
         }
         else ;
     }
-
+    log_printf(DEBUG, "Done flattening with coeff_out=%.5lf power_out=%d", *coeff_out, *power_out);
 }
 
 static void collect(tree_node_t *node, eq_t *eq, int sign)
 {
-    if (!node || !eq) return;
+    if (!node || !eq) { log_printf(ERROR, "No node or no eq for collecting!"); return; }
+
+    log_printf(DEBUG, "Collecting for node with type=%d value=%.5lf op=%c", node->type, node->value, node->op);
 
     if (node->type == NODE_VAR)
     {
         eq->to_find = node->op;
     }
 
-    if (node->type == NODE_NUM)      eq->c += sign * node->value;
+    if      (node->type == NODE_NUM) eq->c += sign * node->value;
     else if (node->type == NODE_VAR) { eq->b += sign * 1.0; eq->to_find = node->op; }
     else if (node->type == NODE_OP)
     {
@@ -308,19 +329,25 @@ static void collect(tree_node_t *node, eq_t *eq, int sign)
             }
         }
     }
+    log_printf(DEBUG, "Done collecting with eq_a=%.5lf eq_b=%.5lf eq_c=%.5lf eq_to_find=%c", \
+                        eq->a, eq->b, eq->c, eq->to_find);
 }
 
 static void free_tree(tree_node_t *node)
 {
-    if (!node) return;
+    if (!node) {log_printf(WARN, "No node to free tree!"); return; }
+    log_printf(DEBUG, "Freeing tree...");
     free_tree(node->left);
     free_tree(node->right);
     free(node);
+    log_printf(DEBUG, "Tree freed!");
 }
 
 uint8_t parse_eq_input(const char *input, eq_t *eq)
 {
     if (!input || !eq) return ERROR_SCARYY;
+
+    log_printf(INFO, "Parsing eq input...");
 
     char *buf = strdup(input);
     if (!buf) return ERROR_SCARYY;
@@ -361,8 +388,9 @@ uint8_t parse_eq_input(const char *input, eq_t *eq)
 
     free_tree(node_2);
     free(buf);
-    
-    //printf("\n\n%.2lf;%.2lf;%.2lf\n\n", eq->a, eq->b, eq->c);
+
+    log_printf(INFO, "Parsed eq input with a=%.5lf b=%.5lf c=%.5lf and to_find=%c", \
+                        eq->a, eq->b, eq->c, eq->to_find);
     
     return OK;
 }
