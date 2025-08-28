@@ -5,6 +5,7 @@
 
 #include "io.h"
 #include "quadratic.h"
+#include "logging.h"
 
 // Output file prefix
 // Maximum filename size

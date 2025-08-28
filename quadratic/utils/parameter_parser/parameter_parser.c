@@ -2,8 +2,10 @@
 
 uint8_t parameters_parse (int argc, char *argv[])
 {
+    log_printf(DEBUG, "Parsing cmd parameters");
     if (argc < 2)
     {
+        log_printf(DEBUG, "No arguments to parse!");
         return OK_CONT;
     }
 
@@ -11,9 +13,11 @@ uint8_t parameters_parse (int argc, char *argv[])
     {
         if (strstr(argv[i], "--input_file"))
         {
+            log_printf(DEBUG, "Found argument for cmd: --input_file");
             if (i == (argc - 1)) return 0;
             
             const char *name = argv[i+1];
+            log_printf(DEBUG, "File's name to open: %s", name);
             
             FILE* f = load_file(name, "r");
 
@@ -22,6 +26,7 @@ uint8_t parameters_parse (int argc, char *argv[])
             // Check how long filename
             if (strlen(name) + strlen(FILE_OUT_PREFIX) + 1 > MAX_FILE_NAME_SIZE)
             {
+                log_printf(FATAL, "Error creating new filename, too long!");
                 print_clear_formatting();
                 print_colored(COLOR_FORE_WHITE, COLOR_BACK_RED, "Error! Too long output filename\n\n");
                 return PERROR;
@@ -30,12 +35,14 @@ uint8_t parameters_parse (int argc, char *argv[])
             strncat(new_name, FILE_OUT_PREFIX, strlen(FILE_OUT_PREFIX));
             strncat(new_name, name,            strlen(name));
 
-            if (parse_file(f, new_name)) return OK_CONT;
-
+            if (parse_file(f, new_name)) { log_printf(DEBUG, "Parsed file successfully!"); return OK_CONT; }
+            
+            log_printf(FATAL, "Unknown error during parsing --input_file");
             return PERROR;
         }
         if (strstr(argv[i], "--help"))
         {
+            log_printf(DEBUG, "Found argument: help");
             printf("Super quadratic equation solver!\n\n");
             printf("Usage:\n");
             printf("    --help                  -> get help (wow)\n");

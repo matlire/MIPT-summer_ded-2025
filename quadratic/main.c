@@ -6,7 +6,7 @@
 int main(int argc, char *argv[]) {
     // Start logging
     FILE *log_file = load_file("log.log", "a");
-    init_logging(log_file, DEBUG);
+    init_logging(log_file, INFO);
 
     log_printf(INFO, "\n\n---STARTING SOLVER---");
 
